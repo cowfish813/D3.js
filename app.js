@@ -14,7 +14,6 @@ const span = document.getElementsByClassName("close"); //element that closes mod
 modalButton.onclick = () =>{ modal.style.display = "block" }; //closes modal on click
 span.onclick = () => { modal.style.display = "none" }; //closes modal on x
 window.onclick = e => { 
-  // debugger
   if (e.target == modal) modal.style.display = "none" };
 
 // window.scrollTo(0, 0)
@@ -97,7 +96,9 @@ const svg = d3.select('#my_dataviz') //adds svg obj to page
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "100 100 750 700")
       
 const parseTime = d3.timeParse(`%m/%d`);
 const y = d3.scaleLinear().range([height, 0]);
@@ -186,7 +187,7 @@ d3.csv(test)
           .text(d => { return (`PM25: ${pm25}`) })
           .style("font-family", "Helvetica Neue, Helvetica, sans-serif")
           .style("font-size", "15")
-          // .style("z-index", "10")
+          .style("z-index", "10")
           .style("opacity", "1") //need to make text appear OVER dots
           .attr("transform",
             ("translate(" + x(selectedLine.date) + "," + y(selectedLine.pm25) + ")")
@@ -208,65 +209,9 @@ d3.csv(test)
     .attr("stroke-width", 2)
     .attr("fill", "none");
 
-      // RE-ENABLE FOR PRODUCTION CODE
-  const dots = svg.append("g")
-    .selectAll("dot")
-    .data(data)
-    .enter()
-    .append("circle")
-    .on("click", showCompare)
-    .on("mouseover", showLine)
-    .attr("r", 5) //radius
-    .attr("cx", d => {
-      return (x(d.date))})
-    .attr("cy", d => (y(d.pm25)))
-    .attr('opacity', '.2')
-    .style("fill", d => (colors(d.year)))
-
-// WORKING ON INDIVIDUAL DOTS HERE. TURN THEM OFF VIA YEAR
-  // const dots = svg.append("g")
-  //   .selectAll("dot")
-  //   .data(data)
-  //   .enter()
-  //   .append("circle")
-  //   .on("click", showCompare)
-  //   .on("mouseover", showLine)
-
-  // const dotButtonsCompare = (e, d) => {
-  //   const year = e.key;
-  //   if (dotCompare[year]) {
-  //     dotCompare[year] = false;
-  //   } else {
-  //     dotCompare[year] = e;
-  //   };
-
-  //   ///uses data
-  //     dots
-  //     .attr("r", 5) //radius
-  //       .attr("cx", d => {
-  //         if (dotCompare[d.year.trim()]) return x(d.date)
-  //       })
-  //       .attr("cy", d => {       
-  //         if (dotCompare[d.year.trim()]) return y(d.pm25)})
-  //       .attr('opacity', '.4')
-  //       .style("fill", d => (colors(d.year)))
-
-  // };
-
-
-  // const dotButtons = d3.select("h3")
-  //   .selectAll("input")
-  //   .data(aData)
-  //   .enter()
-  //   .append("input")
-  //   .attr("type", "button")
-  //   .attr("class", "babyCloud")
-  //   .attr("value", d => { return d.key })
-  //   .sort((a, b) => { return a.key - b.key }) //buttons are ordered this way
-  //   .on("click", dotButtonsCompare);
 
   // // // buttom compare, still uses the same compare object initialized earlier
-  const buttonCompare = (e, d) => { 
+  const buttonCompare = (e, d) => {
     const year = e.key
     if (compare[year]) {
       compare[year] = false;
@@ -274,7 +219,7 @@ d3.csv(test)
       compare[year] = e;
     };
 
-    lines.attr("d", d => { 
+    lines.attr("d", d => {
       if (compare[d.key]) {
         return line(d.values); // from handleclick
       };
@@ -287,11 +232,83 @@ d3.csv(test)
     .data(aData)
     .enter()
     .append("input")
-      .attr("type", "button")
-      .attr("class", "babyCloud")
-      .attr("value", d => { return d.key })
+    .attr("type", "button")
+    .attr("class", "babyCloud")
+    .attr("value", d => { return d.key })
     .sort((a, b) => { return a.key - b.key }) //buttons are ordered this way
     .on("click", buttonCompare);
+
+      // RE-ENABLE FOR PRODUCTION CODE
+  // const dots = svg.append("g")
+  //   .selectAll("dot")
+  //   .data(data)
+  //   .enter()
+  //   .append("circle")
+  //   .on("click", showCompare)
+  //   .on("mouseover", showLine)
+  //   .attr("r", 5) //radius
+  //   .attr("cx", d => {
+  //     return (x(d.date))})
+  //   .attr("cy", d => (y(d.pm25)))
+  //   .attr('opacity', '.2')
+  //   .style("fill", d => (colors(d.year)))
+
+// WORKING ON INDIVIDUAL DOTS HERE. TURN THEM OFF VIA YEAR
+  const dots = svg.append("g")
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+    .on("click", showCompare)
+    .on("mouseover", showLine)
+
+  const dotButtonsCompare = (e, d) => {
+    const year = e.key;
+    if (dotCompare[year]) {
+      dotCompare[year] = false;
+    } else {
+      dotCompare[year] = e;
+    };
+
+    ///uses data
+      dots
+      .attr("r", 5) //radius
+        .attr("cx", d => {
+          // console.log(x(d.date), y(d.pm25),  "date, pm25")
+          // debugger
+          if (dotCompare[d.year.trim()]) {
+            // if (x(d.date) !== 0 && y(d.pm25) < 400 ) 
+            // if (x(d.date) !== 0 && y(d.pm25) > 400 ) 
+            //adjusting yd.pm25 doesnt seem to do much except not let dots go past a point on yaxis
+            return x(d.date)
+          } 
+        })
+        .attr("cy", d => {       
+          if (dotCompare[d.year.trim()]) {
+            // if (x(d.date) !== 0 && y(d.pm25) < 400 ) 
+            // if (x(d.date) !== 0 && y(d.pm25) > 400 ) 
+            //adjusting yd.pm25 doesnt seem to do much except not let dots go past a point on yaxis
+            return y(d.pm25)
+          }
+        })
+        .attr('opacity', '.2')
+        .style("fill", d => (colors(d.year)))
+
+  };
+
+
+  const dotButtons = d3.select("h3")
+    .selectAll("input")
+    .data(aData)
+    .enter()
+    .append("input")
+    .attr("type", "button")
+    .attr("class", "babyCloud")
+    .attr("value", d => { return d.key })
+    .sort((a, b) => { return a.key - b.key }) //buttons are ordered this way
+    .on("click", dotButtonsCompare);
+
+  
 
 
   // zooming
