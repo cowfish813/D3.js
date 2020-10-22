@@ -199,6 +199,7 @@ d3.csv(test)
       }
     })
     .attr("stroke", d => { return colors(d.key) })
+
   };
 
   const lines = svg.selectAll("lines")
@@ -207,7 +208,9 @@ d3.csv(test)
     .append("path")
     .attr('opacity', '1')
     .attr("stroke-width", 2)
-    .attr("fill", "none");
+    .attr("fill", "none")
+
+
 
 
   // // // buttom compare, still uses the same compare object initialized earlier
@@ -221,6 +224,7 @@ d3.csv(test)
 
     lines
     .transition()
+    .duration(1000)
     .attr("d", d => {
       if (compare[d.key]) {
         return line(d.values); // from handleclick
@@ -276,6 +280,7 @@ d3.csv(test)
       dots
       .attr("r", 5) //radius
       .transition()
+      .duration(1500)
         .attr("cx", d => {
           // console.log(x(d.date), y(d.pm25),  "date, pm25")
           // debugger

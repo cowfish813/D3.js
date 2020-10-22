@@ -45,6 +45,14 @@ input, button, submit {
 	/* box-shadow: 0rem 0rem rgba(0,0,0,0.0); */
 }
 
+.svgMenu {
+	/* display: flex; */
+	/* flex-direction: row; */
+	/* bottom: 200rem; */
+	top: 200px;
+
+}
+
 /* .babyCloud::after, .babyCloud::before {
     content: "";
     position: relative;
