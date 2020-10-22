@@ -219,7 +219,9 @@ d3.csv(test)
       compare[year] = e;
     };
 
-    lines.attr("d", d => {
+    lines
+    .transition()
+    .attr("d", d => {
       if (compare[d.key]) {
         return line(d.values); // from handleclick
       };
@@ -273,6 +275,7 @@ d3.csv(test)
     ///uses data
       dots
       .attr("r", 5) //radius
+      .transition()
         .attr("cx", d => {
           // console.log(x(d.date), y(d.pm25),  "date, pm25")
           // debugger
@@ -309,6 +312,9 @@ d3.csv(test)
     .on("click", dotButtonsCompare);
 
   
+
+
+    
 
 
   // zooming
