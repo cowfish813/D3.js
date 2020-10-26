@@ -153,7 +153,7 @@ d3.csv(test)
   
   const colors = d3.scaleOrdinal()
     .domain(years)
-    .range(d3.schemeSet2);
+    .range(d3.schemeCategory10);
 
   // line compare, utilizes initialized compare object
   const line = d3.line()
@@ -268,6 +268,14 @@ d3.csv(test)
     .on("click", showCompare)
     .on("mouseover", showLine)
 
+  // const stuff = () => {
+  //   dots.append("circle")
+  //     .on("click", showCompare)
+  //     .on("mouseover", showLine)
+  // }
+
+    // .attr("transform", "translate(" + (0) + "," + (-10) + ")")
+
   const dotButtonsCompare = (e, d) => {
     const year = e.key;
     if (dotCompare[year]) {
@@ -278,7 +286,14 @@ d3.csv(test)
 
     ///uses data
       dots
-      .attr("r", 5) //radius
+      .attr("r", d => {
+        const num = Number(d.pm25.trim()) / 10;
+        // return Number(d.pm25.trim())/10;
+        // if (num > 23) {
+        //   return 0
+        // } //how do i make it so that radius is 0...?
+        return num
+      }) //radius
       .transition()
       .duration(1500)
         .attr("cx", d => {
@@ -293,14 +308,22 @@ d3.csv(test)
         })
         .attr("cy", d => {       
           if (dotCompare[d.year.trim()]) {
+            // debugger
             // if (x(d.date) !== 0 && y(d.pm25) < 400 ) 
             // if (x(d.date) !== 0 && y(d.pm25) > 400 ) 
             //adjusting yd.pm25 doesnt seem to do much except not let dots go past a point on yaxis
             return y(d.pm25)
           }
         })
-        .attr('opacity', '.2')
-        .style("fill", d => (colors(d.year)))
+        .attr('opacity', '.25')
+        // .style("fill", d => (colors(d.year))) //issue not here...maybe
+        .style("fill", d => {
+          if (true) {
+            
+          }
+          return (colors(d.year));
+        
+        }) //issue not here...maybe
 
   };
 
