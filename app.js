@@ -296,6 +296,7 @@ d3.csv(test)
       }) //radius
       .transition()
       .duration(1500)
+      .attr('opacity', '0')
         .attr("cx", d => {
           // console.log(x(d.date), y(d.pm25),  "date, pm25")
           // debugger
